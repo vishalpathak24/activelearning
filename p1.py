@@ -6,13 +6,16 @@ from sklearn import metrics
 import sys
 import numpy as np
 
-NTRAIN = 14
+NTRAIN = 19
 NROUND = 1
 
 
 twenty_train = fetch_20newsgroups(subset='train',categories=['comp.graphics', 'sci.med'], shuffle=True, random_state=42)
 count_vect = CountVectorizer()
 tf_idf_converter = TfidfTransformer()
+
+data_feature = count_vect.fit_transform(twenty_train.data)
+tf_idf_converter.fit(data_feature)
 
 #Reducing training set
 pool_data = twenty_train.data[NTRAIN:]
@@ -28,8 +31,8 @@ twenty_train.target=twenty_train.target[:NTRAIN]
 #creating SVM
 
 while NROUND !=0:
-	data_feature = count_vect.fit_transform(twenty_train.data)
-	data_tf_feature = tf_idf_converter.fit_transform(data_feature)
+	data_feature = count_vect.transform(twenty_train.data)
+	data_tf_feature = tf_idf_converter.transform(data_feature)
 
 	class_SVM = svm.SVC(kernel='linear')
 	#Training the Classifier
